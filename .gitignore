@@ -1,0 +1,55 @@
+# ==========================================
+# System & Editor Configurations
+# ==========================================
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ==========================================
+# Project Dependency Directories
+# ==========================================
+finbill-api/vendor/
+finbill-api/node_modules/
+finbill-frontend/node_modules/
+
+# ==========================================
+# Local Environment & Secrets
+# ==========================================
+finbill-api/.env
+finbill-api/.env.backup
+finbill-api/.env.production
+finbill-frontend/.env
+*.local
+
+# ==========================================
+# Backend Framework (Laravel) Cache & Key Exclusions
+# ==========================================
+finbill-api/public/storage
+finbill-api/storage/*.key
+finbill-api/storage/framework/cache/data/*
+finbill-api/storage/framework/sessions/*
+finbill-api/storage/framework/testing/*
+finbill-api/storage/framework/views/*
+finbill-api/storage/logs/*.log
+finbill-api/.phpunit.result.cache
+
+# ==========================================
+# Frontend Build Outputs
+# ==========================================
+finbill-frontend/dist/
+finbill-frontend/dist-ssr/
+
+# ==========================================
+# Local Drafts, Scratchpads & Documentation
+# ==========================================
+linked posts finbill.txt
+test_app.py
+walkthrough.md
+task.md
+implementation_plan.md
+scratch/
