@@ -1,22 +1,38 @@
 FROM php:8.2-cli-alpine
 
-# Install standard system hooks and PostgreSQL client tools
-RUN apk add --no-cache bash postgresql-dev libpng-dev libzip-dev zip unzip
+# Install required packages
+RUN apk add --no-cache \
+    bash \
+    git \
+    postgresql-dev \
+    libpng-dev \
+    libzip-dev \
+    zip \
+    unzip
 
-# Build standard PHP extensions database layers
-RUN docker-php-ext-install pdo pdo_pgsql gd zip
+# Install PHP extensions
+RUN docker-php-ext-install \
+    pdo \
+    pdo_pgsql \
+    gd \
+    zip
 
-# Download global Composer binaries
+# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
+
+# Copy project files
 COPY . .
 
-# Run standard optimization packages install steps
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Expose production port matching Render environments variables
+# Expose Render port
 EXPOSE 10000
 
-# Standalone start command triggering internal artisan serving loops straight
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=10000"]
+# Start application
+CMD sh -c "\
+php artisan optimize:clear && \
+php artisan migrate --force && \
+php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"
