@@ -1,21 +1,22 @@
-FROM php:8.2-fpm-alpine
+FROM php:8.2-cli-alpine
 
-RUN apk add --no-cache nginx wget supervisor bash curl postgresql-dev libpng-dev libzip-dev zip unzip
+# Install standard system hooks and PostgreSQL client tools
+RUN apk add --no-cache bash postgresql-dev libpng-dev libzip-dev zip unzip
 
+# Build standard PHP extensions database layers
 RUN docker-php-ext-install pdo pdo_pgsql gd zip
 
+# Download global Composer binaries
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 COPY . .
 
+# Run standard optimization packages install steps
 RUN composer install --no-dev --optimize-autoloader
 
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-
-COPY ./docker/nginx.conf /etc/nginx/nginx.conf
-COPY ./docker/supervisord.conf /etc/supervisord.conf
-
+# Expose production port matching Render environments variables
 EXPOSE 10000
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+# Standalone start command triggering internal artisan serving loops straight
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=10000"]
