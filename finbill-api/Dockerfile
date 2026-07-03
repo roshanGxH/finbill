@@ -33,6 +33,10 @@ EXPOSE 10000
 
 # Start application
 CMD sh -c "\
+echo '===== STARTING FINBILL =====' && \
+echo '===== RUNNING MIGRATIONS =====' && \
 php artisan migrate --force && \
+echo '===== CLEARING CACHE =====' && \
 php artisan optimize:clear && \
+echo '===== STARTING SERVER =====' && \
 php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"
